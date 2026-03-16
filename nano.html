@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chrome Nano — Summarizer API Test</title>
+	<style>
+		:root {
+			--bg: #f4efe6;
+			--panel: #fffaf2;
+			--ink: #1f1b16;
+			--accent: #0f766e;
+			--accent-2: #1d4ed8;
+			--ok: #166534;
+			--warn: #b45309;
+			--err: #b91c1c;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			color: var(--ink);
+			background:
+				radial-gradient(circle at 10% 10%, #efe4d5 0%, transparent 40%),
+				radial-gradient(circle at 90% 20%, #d9f2ef 0%, transparent 35%),
+				var(--bg);
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+			padding: 20px;
+		}
+
+		.card {
+			width: min(800px, 100%);
+			background: var(--panel);
+			border: 1px solid #e5d8c4;
+			border-radius: 16px;
+			padding: 28px;
+			box-shadow: 0 14px 34px rgba(31, 27, 22, 0.11);
+		}
+
+		h1 {
+			margin: 0 0 4px;
+			font-size: clamp(1.45rem, 2.4vw, 2rem);
+			letter-spacing: 0.02em;
+		}
+
+		p { margin: 0 0 14px; }
+
+		.badge {
+			display: inline-block;
+			border-radius: 999px;
+			padding: 4px 12px;
+			font-size: 0.85rem;
+			font-weight: 700;
+			background: #d1fae5;
+			color: var(--ok);
+			margin-bottom: 12px;
+		}
+		.badge.warn  { background: #ffedd5; color: var(--warn); }
+		.badge.err   { background: #fee2e2; color: var(--err); }
+
+		label {
+			display: block;
+			font-weight: 600;
+			margin-bottom: 6px;
+		}
+
+		textarea {
+			width: 100%;
+			min-height: 160px;
+			border: 1px solid #d6cfc3;
+			border-radius: 10px;
+			padding: 12px;
+			font-family: inherit;
+			font-size: 0.95rem;
+			resize: vertical;
+			margin-bottom: 12px;
+		}
+
+		select {
+			padding: 8px 12px;
+			border-radius: 8px;
+			border: 1px solid #d6cfc3;
+			font-size: 0.9rem;
+			margin-right: 10px;
+		}
+
+		.row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 10px;
+			margin: 14px 0;
+		}
+
+		button {
+			border: none;
+			border-radius: 10px;
+			padding: 10px 18px;
+			font-weight: 600;
+			cursor: pointer;
+			background: var(--accent);
+			color: white;
+			transition: transform 0.12s ease, filter 0.12s ease;
+		}
+		button:hover { transform: translateY(-1px); filter: brightness(1.06); }
+		button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+		#output {
+			background: #1c1917;
+			color: #e7e5e4;
+			border-radius: 12px;
+			padding: 16px;
+			white-space: pre-wrap;
+			word-wrap: break-word;
+			min-height: 60px;
+			font-size: 0.92rem;
+			line-height: 1.5;
+		}
+
+		.hint {
+			font-size: 0.88rem;
+			opacity: 0.78;
+			margin-top: 14px;
+		}
+	</style>
+</head>
+<body>
+	<main class="card">
+		<div id="statusBadge" class="badge">Checking Summarizer API…</div>
+		<h1>Chrome Nano — Summarizer API</h1>
+		<p>Paste or type text below and click <strong>Summarize</strong> to run Chrome's on-device Nano model.</p>
+
+		<label for="inputText">Text to summarize</label>
+		<textarea id="inputText">The Apollo program, also known as Project Apollo, was the United States human spaceflight program carried out by the National Aeronautics and Space Administration (NASA), which succeeded in preparing and landing the first humans on the Moon from 1969 to 1972. It was first conceived during Dwight D. Eisenhower's administration as a three-person spacecraft to follow the one-person Project Mercury, which put the first Americans in space. Apollo was later dedicated to President John F. Kennedy's national goal for the 1960s of "landing a man on the Moon and returning him safely to the Earth" in an pointAddress to Congress on May 25, 1961. It was the third US human spaceflight program to fly, preceded by the two-person Project Gemini conceived in 1961 to extend spaceflight capability in support of Apollo.</textarea>
+
+		<div class="row">
+			<label style="margin:0">Type:
+				<select id="typeSelect">
+					<option value="tl;dr" selected>tl;dr</option>
+					<option value="key-points">Key Points</option>
+					<option value="teaser">Teaser</option>
+					<option value="headline">Headline</option>
+				</select>
+			</label>
+			<label style="margin:0">Length:
+				<select id="lengthSelect">
+					<option value="short">Short</option>
+					<option value="medium" selected>Medium</option>
+					<option value="long">Long</option>
+				</select>
+			</label>
+			<button id="summarizeBtn" disabled>Summarize</button>
+		</div>
+
+		<div id="output">Summary will appear here…</div>
+
+		<p class="hint">
+			<strong>Requirements:</strong> Chrome 131+ with the Summarization API enabled.<br>
+			Enable at <code>chrome://flags/#summarization-api-for-gemini-nano</code><br>
+			Also ensure Gemini Nano is downloaded at <code>chrome://components</code> → "Optimization Guide On Device Model".
+		</p>
+	</main>
+
+	<script src="nano.js"></script>
+</body>
+</html>
